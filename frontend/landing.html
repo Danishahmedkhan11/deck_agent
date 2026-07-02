@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck Agent by Unilever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Spline+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#FAFBFF;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  ::selection{background:#0D009D;color:#fff;}
+  @keyframes deckaFadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes deckaBlink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+  @keyframes deckaFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  @keyframes deckaGrow{from{transform:scaleY(0);}to{transform:scaleY(1);}}
+  @keyframes deckaSpin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div style="font-family:'Plus Jakarta Sans',sans-serif;color:#08071A;background:#FAFBFF;overflow:hidden;">
+
+  <!-- NAV -->
+  <nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto;padding:22px 40px;backdrop-filter:saturate(1.2);">
+    <div style="display:flex;align-items:center;gap:11px;">
+      <img src="unilever-logo.png" alt="Unilever" style="height:48px;width:auto;flex-shrink:0;">
+    </div>
+    <div style="display:flex;align-items:center;gap:38px;font-size:15px;color:#3D3B6E;">
+      <a href="#features" style="color:inherit;text-decoration:none;">Features</a>
+      <a href="#how" style="color:inherit;text-decoration:none;">How it works</a>
+      <a href="#gallery" style="color:inherit;text-decoration:none;">Gallery</a>
+      <a href="#usecases" style="color:inherit;text-decoration:none;">Use cases</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button style="appearance:none;background:none;border:none;font:500 15px/1 'Plus Jakarta Sans',sans-serif;color:#08071A;cursor:pointer;padding:10px 4px;">Sign in</button>
+      <button onclick="location.href='generator.html'" style="appearance:none;background:#08071A;color:#EEF0FF;border:none;border-radius:999px;font:500 15px/1 'Plus Jakarta Sans',sans-serif;padding:12px 22px;cursor:pointer;">Start free</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header style="max-width:1240px;margin:0 auto;padding:54px 40px 90px;display:grid;grid-template-columns:0.92fr 1.08fr;gap:64px;align-items:center;">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border:1px solid #D5D8F8;border-radius:999px;font-size:13px;color:#3D3B6E;background:rgba(255,255,255,0.5);">
+        <span style="width:7px;height:7px;border-radius:50%;background:#1A50D6;box-shadow:0 0 0 3px rgba(26,80,214,0.18);"></span>
+        The AI presentation agent
+      </div>
+      <h1 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:62px;line-height:1.03;letter-spacing:-0.02em;margin:24px 0 0;">
+        From a prompt to a <span style="font-weight:800;color:#0D009D;">boardroom-ready</span> deck.
+      </h1>
+      <p style="font-size:18px;line-height:1.6;color:#3D3B6E;max-width:460px;margin:22px 0 0;">
+        It reads your files, structures the story, designs every slide, and builds the charts, diagrams and icons for you. Then exports straight to PowerPoint.
+      </p>
+
+      <!-- prompt box -->
+      <div style="margin-top:34px;background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:18px 18px 14px;box-shadow:0 24px 50px -28px rgba(8,7,26,0.4);max-width:520px;">
+        <div style="display:flex;gap:8px;margin-bottom:13px;">
+          <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:#3D3B6E;background:#FAFBFF;border:1px solid #DDE0F5;border-radius:8px;padding:6px 10px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="2.2"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+            Q3_Financials.xlsx
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:#3D3B6E;background:#FAFBFF;border:1px solid #DDE0F5;border-radius:8px;padding:6px 10px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="2.2"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>
+            market_brief.pdf
+          </span>
+        </div>
+        <div style="min-height:46px;font-size:16px;line-height:1.45;color:#08071A;font-family:'Space Mono',monospace;">
+          <span id="typed"></span><span style="display:inline-block;width:9px;height:18px;background:#0D009D;vertical-align:-3px;margin-left:1px;animation:deckaBlink 1s steps(1) infinite;"></span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid #E8EAFF;">
+          <div style="display:flex;gap:14px;color:#7B7AAA;">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15V8a2 2 0 0 0-2-2h-3l-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"/><circle cx="18" cy="18" r="3"/><path d="M18 16.5v3M16.5 18h3"/></svg>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <button onclick="location.href='generator.html'" style="display:inline-flex;align-items:center;gap:8px;appearance:none;background:#0D009D;color:#fff;border:none;border-radius:10px;font:600 14.5px/1 'Plus Jakarta Sans',sans-serif;padding:11px 18px;cursor:pointer;">
+            Generate deck
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <p style="font-size:13.5px;color:#7B7AAA;margin:18px 0 0;">No credit card · Export to PPTX &amp; Google Slides · 40+ themes</p>
+    </div>
+
+    <!-- deck preview -->
+    <div style="position:relative;">
+      <div style="position:absolute;top:-14px;right:8px;z-index:3;display:inline-flex;align-items:center;gap:8px;background:#08071A;color:#EEF0FF;border-radius:999px;padding:9px 15px;font-size:13px;box-shadow:0 14px 30px -14px rgba(8,7,26,0.6);animation:deckaFloat 5s ease-in-out infinite;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="2.2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+        Generating · 12 slides
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 168px;gap:16px;align-items:stretch;">
+        <!-- main slide -->
+        <div style="background:#fff;border:1px solid #DDE0F5;border-radius:16px;box-shadow:0 40px 80px -40px rgba(8,7,26,0.45);padding:30px 32px;aspect-ratio:4/3;display:flex;flex-direction:column;animation:deckaFadeUp .7s ease both;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Q3 Performance</span>
+            <span style="font-size:11px;color:#A0A0C8;">03 / 12</span>
+          </div>
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:27px;line-height:1.08;margin:10px 0 0;letter-spacing:-0.01em;">Revenue grew 38% on enterprise demand</h3>
+          <div style="display:flex;align-items:flex-end;gap:13px;height:118px;margin-top:auto;padding-top:18px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:100%;height:42%;background:#DDE0F5;border-radius:5px 5px 0 0;transform-origin:bottom;animation:deckaGrow .6s ease both .35s;"></div><span style="font-size:9.5px;color:#A0A0C8;">Q1</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:100%;height:58%;background:#DDE0F5;border-radius:5px 5px 0 0;transform-origin:bottom;animation:deckaGrow .6s ease both .45s;"></div><span style="font-size:9.5px;color:#A0A0C8;">Q2</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:100%;height:78%;background:#1A50D6;border-radius:5px 5px 0 0;transform-origin:bottom;animation:deckaGrow .6s ease both .55s;"></div><span style="font-size:9.5px;color:#5858A0;font-weight:500;">Q3</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:100%;height:96%;background:#0D009D;border-radius:5px 5px 0 0;transform-origin:bottom;animation:deckaGrow .6s ease both .65s;"></div><span style="font-size:9.5px;color:#5858A0;font-weight:500;">Q4e</span></div>
+          </div>
+        </div>
+        <!-- filmstrip -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="background:#08071A;border-radius:11px;padding:15px;flex:1;display:flex;flex-direction:column;justify-content:center;animation:deckaFadeUp .7s ease both .15s;">
+            <span style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:#0D009D;font-weight:600;">Cover</span>
+            <div style="font-family:'DM Sans',sans-serif;color:#EEF0FF;font-size:15px;line-height:1.15;margin-top:6px;">Q3 Board<br>Review 2026</div>
+            <div style="margin-top:10px;width:34px;height:3px;background:#0D009D;border-radius:2px;"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #DDE0F5;border-radius:11px;padding:13px;flex:1;animation:deckaFadeUp .7s ease both .3s;">
+            <span style="font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:#A0A0C8;font-weight:600;">Roadmap</span>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:11px;">
+              <div style="width:15px;height:15px;border-radius:4px;background:#0D009D;"></div>
+              <div style="flex:1;height:2px;background:#DDE0F5;"></div>
+              <div style="width:15px;height:15px;border-radius:4px;background:#DDE0F5;"></div>
+              <div style="flex:1;height:2px;background:#DDE0F5;"></div>
+              <div style="width:15px;height:15px;border-radius:4px;background:#DDE0F5;"></div>
+            </div>
+            <div style="height:5px;width:80%;background:#E8EAFF;border-radius:3px;margin-top:13px;"></div>
+            <div style="height:5px;width:60%;background:#E8EAFF;border-radius:3px;margin-top:7px;"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #DDE0F5;border-radius:11px;padding:13px;flex:1;animation:deckaFadeUp .7s ease both .45s;">
+            <span style="font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:#A0A0C8;font-weight:600;">Metrics</span>
+            <div style="display:flex;gap:8px;margin-top:11px;">
+              <div style="flex:1;"><div style="font-family:'DM Sans',sans-serif;font-size:18px;color:#1A50D6;">+38%</div><div style="height:4px;width:90%;background:#E8EAFF;border-radius:2px;margin-top:4px;"></div></div>
+              <div style="flex:1;"><div style="font-family:'DM Sans',sans-serif;font-size:18px;color:#08071A;">$4.2M</div><div style="height:4px;width:70%;background:#E8EAFF;border-radius:2px;margin-top:4px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INPUT BAND -->
+  <section style="background:#fff;border-top:1px solid #DDE0F5;border-bottom:1px solid #DDE0F5;">
+    <div style="max-width:1240px;margin:0 auto;padding:46px 40px;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;">
+      <span style="font-size:13.5px;color:#7B7AAA;letter-spacing:0.02em;white-space:nowrap;">Turns anything into a deck</span>
+      <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:9px;font-size:15px;color:#3D3B6E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="1.8"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>PDF reports</span>
+        <span style="display:inline-flex;align-items:center;gap:9px;font-size:15px;color:#3D3B6E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>Excel &amp; CSV</span>
+        <span style="display:inline-flex;align-items:center;gap:9px;font-size:15px;color:#3D3B6E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#08071A" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h11"/></svg>Raw notes</span>
+        <span style="display:inline-flex;align-items:center;gap:9px;font-size:15px;color:#3D3B6E;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B63F5" stroke-width="1.8"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>A one-line prompt</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" style="max-width:1240px;margin:0 auto;padding:104px 40px 60px;">
+    <div style="max-width:640px;">
+      <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">How it works</span>
+      <h2 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:44px;line-height:1.08;letter-spacing:-0.02em;margin:16px 0 0;">Your analyst, designer and copywriter — in one pass.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:52px;">
+      <div style="background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:30px;">
+        <div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:#FAFBFF;font-family:'DM Sans',sans-serif;font-size:20px;color:#0D009D;">1</div>
+        <h3 style="font-size:19px;font-weight:600;margin:22px 0 0;">Drop in your material</h3>
+        <p style="font-size:15px;line-height:1.6;color:#3D3B6E;margin:10px 0 0;">Upload spreadsheets, PDFs and notes, or just describe what you need. Unilever Deck Agent reads and understands all of it.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:30px;">
+        <div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:#FAFBFF;font-family:'DM Sans',sans-serif;font-size:20px;color:#0D009D;">2</div>
+        <h3 style="font-size:19px;font-weight:600;margin:22px 0 0;">AI structures &amp; designs</h3>
+        <p style="font-size:15px;line-height:1.6;color:#3D3B6E;margin:10px 0 0;">It builds the narrative, picks layouts, writes the copy, and turns your numbers into charts and diagrams.</p>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:30px;">
+        <div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:#FAFBFF;font-family:'DM Sans',sans-serif;font-size:20px;color:#0D009D;">3</div>
+        <h3 style="font-size:19px;font-weight:600;margin:22px 0 0;">Refine by chat, export</h3>
+        <p style="font-size:15px;line-height:1.6;color:#3D3B6E;margin:10px 0 0;">Tweak anything in plain language — "make it punchier", "add a timeline". Export to PPTX or Google Slides.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE SHOWCASE (dark) -->
+  <section id="features" style="background:#060518;color:#EEF0FF;margin-top:64px;">
+    <div style="max-width:1240px;margin:0 auto;padding:104px 40px;">
+      <div style="max-width:680px;">
+        <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">What it builds</span>
+        <h2 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:46px;line-height:1.07;letter-spacing:-0.02em;margin:16px 0 0;color:#EEF0FF;">Every slide element, generated and editable.</h2>
+      </div>
+
+      <!-- tabs -->
+      <div style="display:flex;gap:34px;margin-top:46px;border-bottom:1px solid rgba(13,0,157,0.1);">
+        <button id="tab-charts" onclick="setFeature('charts')" style="appearance:none;background:none;border:none;border-bottom:2px solid #0D009D;padding:0 0 16px;margin:0 0 -1px;cursor:pointer;font-family:'Spline Sans',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:0.01em;color:#EEF0FF;transition:color .2s,border-color .2s;display:flex;align-items:center;gap:9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></svg>
+          Data charts
+        </button>
+        <button id="tab-flow" onclick="setFeature('flow')" style="appearance:none;background:none;border:none;border-bottom:2px solid transparent;padding:0 0 16px;margin:0 0 -1px;cursor:pointer;font-family:'Spline Sans',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:0.01em;color:rgba(238,240,255,0.7);transition:color .2s,border-color .2s;display:flex;align-items:center;gap:9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="9" width="7" height="5" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/><path d="M10 5.5h2.5a2 2 0 0 1 2 2M10 18.5h2.5a2 2 0 0 0 2-2"/></svg>
+          Flow diagrams
+        </button>
+        <button id="tab-layout" onclick="setFeature('layout')" style="appearance:none;background:none;border:none;border-bottom:2px solid transparent;padding:0 0 16px;margin:0 0 -1px;cursor:pointer;font-family:'Spline Sans',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:0.01em;color:rgba(238,240,255,0.7);transition:color .2s,border-color .2s;display:flex;align-items:center;gap:9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg>
+          Smart layouts
+        </button>
+        <button id="tab-icons" onclick="setFeature('icons')" style="appearance:none;background:none;border:none;border-bottom:2px solid transparent;padding:0 0 16px;margin:0 0 -1px;cursor:pointer;font-family:'Spline Sans',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:0.01em;color:rgba(238,240,255,0.7);transition:color .2s,border-color .2s;display:flex;align-items:center;gap:9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/></svg>
+          Icons &amp; art
+        </button>
+      </div>
+
+      <!-- panel: charts -->
+      <div id="panel-charts" style="display:grid;grid-template-columns:0.92fr 1.08fr;gap:56px;align-items:center;margin-top:54px;">
+        <div style="padding-right:20px;">
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:30px;margin:0;color:#EEF0FF;">Raw data becomes the right chart.</h3>
+          <p style="font-size:16px;line-height:1.65;color:rgba(238,240,255,0.75);margin:18px 0 0;">Drop a spreadsheet and Unilever Deck Agent chooses bars, lines, donuts or tables — labels them, highlights the insight, and matches your theme. Every value stays editable.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Bar &amp; column</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Trend lines</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Donut &amp; KPI</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Smart tables</span>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:30px;color:#08071A;box-shadow:0 40px 80px -40px rgba(8,7,26,0.6);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#0D009D;font-weight:600;">Revenue by segment</span>
+              <div style="font-family:'DM Sans',sans-serif;font-size:26px;margin-top:5px;">$4.2M <span style="font-size:14px;color:#1A50D6;font-family:'Spline Sans',sans-serif;">▲ 38%</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;font-size:11px;color:#5858A0;">
+              <span style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:2px;background:#0D009D;"></span>Enterprise</span>
+              <span style="display:flex;align-items:center;gap:6px;"><span style="width:9px;height:9px;border-radius:2px;background:#1A50D6;"></span>Mid-market</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:18px;height:150px;margin-top:24px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;"><div style="width:100%;display:flex;gap:5px;align-items:flex-end;height:120px;"><div style="flex:1;background:#0D009D;height:52%;border-radius:4px 4px 0 0;"></div><div style="flex:1;background:#1A50D6;height:34%;border-radius:4px 4px 0 0;"></div></div><span style="font-size:11px;color:#A0A0C8;">Q1</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;"><div style="width:100%;display:flex;gap:5px;align-items:flex-end;height:120px;"><div style="flex:1;background:#0D009D;height:64%;border-radius:4px 4px 0 0;"></div><div style="flex:1;background:#1A50D6;height:42%;border-radius:4px 4px 0 0;"></div></div><span style="font-size:11px;color:#A0A0C8;">Q2</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;"><div style="width:100%;display:flex;gap:5px;align-items:flex-end;height:120px;"><div style="flex:1;background:#0D009D;height:82%;border-radius:4px 4px 0 0;"></div><div style="flex:1;background:#1A50D6;height:54%;border-radius:4px 4px 0 0;"></div></div><span style="font-size:11px;color:#A0A0C8;">Q3</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;"><div style="width:100%;display:flex;gap:5px;align-items:flex-end;height:120px;"><div style="flex:1;background:#0D009D;height:100%;border-radius:4px 4px 0 0;"></div><div style="flex:1;background:#1A50D6;height:66%;border-radius:4px 4px 0 0;"></div></div><span style="font-size:11px;color:#A0A0C8;">Q4e</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- panel: flow -->
+      <div id="panel-flow" style="display:none;grid-template-columns:0.92fr 1.08fr;gap:56px;align-items:center;margin-top:54px;">
+        <div style="padding-right:20px;">
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:30px;margin:0;color:#EEF0FF;">Processes drawn as clean diagrams.</h3>
+          <p style="font-size:16px;line-height:1.65;color:rgba(238,240,255,0.75);margin:18px 0 0;">Describe a workflow, funnel or org and Unilever Deck Agent lays out the boxes, arrows and swimlanes — aligned to a grid, snapped, and ready to recolor.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Flowcharts</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Timelines</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Funnels</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Org charts</span>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:34px 30px;color:#08071A;box-shadow:0 40px 80px -40px rgba(8,7,26,0.6);display:flex;flex-direction:column;justify-content:center;">
+          <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#0D009D;font-weight:600;margin-bottom:24px;">Go-to-market flow</span>
+          <div style="display:flex;align-items:center;">
+            <div style="flex:1;text-align:center;background:#FAFBFF;border:1.5px solid #08071A;border-radius:10px;padding:16px 8px;font-size:13px;font-weight:600;">Research</div>
+            <svg width="34" height="20" viewBox="0 0 34 20" fill="none" stroke="#A0A0C8" stroke-width="1.8"><path d="M2 10h26M22 4l6 6-6 6"/></svg>
+            <div style="flex:1;text-align:center;background:#0D009D;color:#fff;border:1.5px solid #0D009D;border-radius:10px;padding:16px 8px;font-size:13px;font-weight:600;">Build</div>
+            <svg width="34" height="20" viewBox="0 0 34 20" fill="none" stroke="#A0A0C8" stroke-width="1.8"><path d="M2 10h26M22 4l6 6-6 6"/></svg>
+            <div style="flex:1;text-align:center;background:#FAFBFF;border:1.5px solid #08071A;border-radius:10px;padding:16px 8px;font-size:13px;font-weight:600;">Launch</div>
+          </div>
+          <div style="display:flex;justify-content:center;margin:14px 0;"><svg width="20" height="30" viewBox="0 0 20 30" fill="none" stroke="#A0A0C8" stroke-width="1.8"><path d="M10 2v22M4 18l6 6 6-6"/></svg></div>
+          <div style="display:flex;align-items:center;">
+            <div style="flex:1;text-align:center;background:#1A50D6;color:#fff;border:1.5px solid #1A50D6;border-radius:10px;padding:16px 8px;font-size:13px;font-weight:600;">Measure</div>
+            <svg width="34" height="20" viewBox="0 0 34 20" fill="none" stroke="#A0A0C8" stroke-width="1.8"><path d="M2 10h26M22 4l6 6-6 6"/></svg>
+            <div style="flex:1;text-align:center;background:#FAFBFF;border:1.5px solid #08071A;border-radius:10px;padding:16px 8px;font-size:13px;font-weight:600;">Scale</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- panel: layout -->
+      <div id="panel-layout" style="display:none;grid-template-columns:0.92fr 1.08fr;gap:56px;align-items:center;margin-top:54px;">
+        <div style="padding-right:20px;">
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:30px;margin:0;color:#EEF0FF;">A layout for every kind of slide.</h3>
+          <p style="font-size:16px;line-height:1.65;color:rgba(238,240,255,0.75);margin:18px 0 0;">Title, agenda, comparison, quote, metric, section break — Unilever Deck Agent composes each with balanced spacing and typographic hierarchy, then keeps it consistent across the whole deck.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">40+ themes</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Auto grid</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Brand kit</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div style="background:#fff;border-radius:12px;padding:18px;aspect-ratio:4/3;display:flex;flex-direction:column;justify-content:center;color:#08071A;box-shadow:0 30px 60px -40px rgba(8,7,26,0.6);">
+            <div style="width:30px;height:3px;background:#0D009D;border-radius:2px;"></div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:20px;margin-top:10px;line-height:1.1;">Title slide</div>
+            <div style="height:5px;width:60%;background:#E8EAFF;border-radius:3px;margin-top:10px;"></div>
+          </div>
+          <div style="background:#08071A;border-radius:12px;padding:18px;aspect-ratio:4/3;display:flex;flex-direction:column;justify-content:center;color:#EEF0FF;box-shadow:0 30px 60px -40px rgba(8,7,26,0.6);">
+            <span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#0D009D;">Section</span>
+            <div style="font-family:'DM Sans',sans-serif;font-size:20px;margin-top:8px;">02 · Strategy</div>
+          </div>
+          <div style="background:#fff;border-radius:12px;padding:18px;aspect-ratio:4/3;color:#08071A;box-shadow:0 30px 60px -40px rgba(8,7,26,0.6);">
+            <div style="display:flex;gap:10px;height:100%;">
+              <div style="flex:1;background:#FAFBFF;border-radius:7px;"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center;"><div style="height:5px;width:90%;background:#E8EAFF;border-radius:3px;"></div><div style="height:5px;width:70%;background:#E8EAFF;border-radius:3px;"></div><div style="height:5px;width:80%;background:#E8EAFF;border-radius:3px;"></div></div>
+            </div>
+          </div>
+          <div style="background:#fff;border-radius:12px;padding:18px;aspect-ratio:4/3;display:flex;gap:10px;color:#08071A;box-shadow:0 30px 60px -40px rgba(8,7,26,0.6);">
+            <div style="flex:1;text-align:center;"><div style="font-family:'DM Sans',sans-serif;font-size:22px;color:#0D009D;">38%</div><div style="height:4px;width:80%;margin:6px auto 0;background:#E8EAFF;border-radius:2px;"></div></div>
+            <div style="flex:1;text-align:center;"><div style="font-family:'DM Sans',sans-serif;font-size:22px;color:#1A50D6;">2.4x</div><div style="height:4px;width:80%;margin:6px auto 0;background:#E8EAFF;border-radius:2px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- panel: icons -->
+      <div id="panel-icons" style="display:none;grid-template-columns:0.92fr 1.08fr;gap:56px;align-items:center;margin-top:54px;">
+        <div style="padding-right:20px;">
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:30px;margin:0;color:#EEF0FF;">Icons and imagery that fit the page.</h3>
+          <p style="font-size:16px;line-height:1.65;color:rgba(238,240,255,0.75);margin:18px 0 0;">Unilever Deck Agent places consistent line icons, generates section imagery, and keeps stroke weight, color and scale uniform — so nothing looks pasted in.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Line icon set</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Generated art</span>
+            <span style="font-size:13px;color:#EEF0FF;border:1px solid rgba(244,240,232,0.2);border-radius:999px;padding:7px 13px;">Auto-match</span>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:30px;color:#08071A;box-shadow:0 40px 80px -40px rgba(8,7,26,0.6);">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08071A" stroke-width="1.7"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.1L12 17l-5.5 2.3 1-6.1L3 8.9 9 8z"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6B63F5" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08071A" stroke-width="1.7"><path d="M20 12v7H4v-7"/><path d="M12 3v12M8 7l4-4 4 4"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="1.7"><circle cx="9" cy="7" r="3.5"/><path d="M2 21a7 7 0 0 1 14 0M17 11l2 2 4-4"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="1.7"><path d="M21 11.5a8.5 8.5 0 1 1-4.9-7.7L21 4"/><path d="M21 4v5h-5"/></svg></div>
+            <div style="aspect-ratio:1;background:#FAFBFF;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08071A" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" style="max-width:1240px;margin:0 auto;padding:104px 40px 60px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
+      <div style="max-width:560px;">
+        <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Made with Unilever Deck Agent</span>
+        <h2 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:44px;line-height:1.08;letter-spacing:-0.02em;margin:16px 0 0;">Decks for every moment that matters.</h2>
+      </div>
+      <button style="appearance:none;background:none;border:1px solid #D5D8F8;border-radius:999px;font:500 15px/1 'Plus Jakarta Sans',sans-serif;padding:13px 22px;cursor:pointer;color:#08071A;">Browse 120+ templates</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;">
+      <div style="background:#08071A;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#EEF0FF;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Board update</span>
+          <div><div style="font-family:'DM Sans',sans-serif;font-size:25px;line-height:1.08;">Q3 Board Review</div><div style="width:38px;height:3px;background:#0D009D;border-radius:2px;margin-top:12px;"></div></div>
+        </div>
+        <div style="background:#fff;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Board update</span><span style="font-size:12px;color:#7B7AAA;">14 slides</span></div>
+      </div>
+      <div style="background:#1A50D6;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#EEF0FF;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#FFD9B0;font-weight:600;">Fundraise</span>
+          <div><div style="font-family:'DM Sans',sans-serif;font-size:25px;line-height:1.08;">Series A Pitch</div><div style="display:flex;gap:5px;margin-top:14px;"><div style="width:24px;height:5px;background:rgba(255,255,255,0.85);border-radius:3px;"></div><div style="width:14px;height:5px;background:rgba(255,255,255,0.4);border-radius:3px;"></div><div style="width:14px;height:5px;background:rgba(255,255,255,0.4);border-radius:3px;"></div></div></div>
+        </div>
+        <div style="background:#fff;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Pitch deck</span><span style="font-size:12px;color:#7B7AAA;">18 slides</span></div>
+      </div>
+      <div style="background:#FAFBFF;border:1px solid #DDE0F5;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#08071A;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Analysis</span>
+          <div style="display:flex;align-items:flex-end;gap:7px;height:64px;"><div style="flex:1;background:#0D009D;height:50%;border-radius:3px 3px 0 0;"></div><div style="flex:1;background:#08071A;height:70%;border-radius:3px 3px 0 0;"></div><div style="flex:1;background:#1A50D6;height:95%;border-radius:3px 3px 0 0;"></div><div style="flex:1;background:#6B63F5;height:60%;border-radius:3px 3px 0 0;"></div></div>
+        </div>
+        <div style="background:#fff;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Market analysis</span><span style="font-size:12px;color:#7B7AAA;">11 slides</span></div>
+      </div>
+      <div style="background:#fff;border:1px solid #DDE0F5;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#08071A;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Plan</span>
+          <div style="display:flex;align-items:center;gap:4px;"><div style="width:13px;height:13px;border-radius:50%;background:#0D009D;"></div><div style="flex:1;height:2px;background:#DDE0F5;"></div><div style="width:13px;height:13px;border-radius:50%;background:#08071A;"></div><div style="flex:1;height:2px;background:#DDE0F5;"></div><div style="width:13px;height:13px;border-radius:50%;background:#DDE0F5;"></div></div>
+        </div>
+        <div style="background:#fff;border-top:1px solid #E8EAFF;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Project roadmap</span><span style="font-size:12px;color:#7B7AAA;">9 slides</span></div>
+      </div>
+      <div style="background:#6B63F5;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#08071A;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#08071A;font-weight:700;">Sales</span>
+          <div><div style="font-family:'DM Sans',sans-serif;font-size:25px;line-height:1.08;">Q4 Sales QBR</div><div style="font-size:13px;margin-top:8px;font-weight:600;">▲ 38% vs target</div></div>
+        </div>
+        <div style="background:#fff;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Sales QBR</span><span style="font-size:12px;color:#7B7AAA;">16 slides</span></div>
+      </div>
+      <div style="background:#08071A;border-radius:16px;overflow:hidden;">
+        <div style="aspect-ratio:16/10;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:#EEF0FF;">
+          <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#6B63F5;font-weight:600;">Education</span>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;"><div style="height:22px;background:rgba(13,0,157,0.1);border-radius:5px;"></div><div style="height:22px;background:rgba(13,0,157,0.5);border-radius:5px;"></div><div style="height:22px;background:rgba(13,0,157,0.5);border-radius:5px;"></div><div style="height:22px;background:rgba(13,0,157,0.1);border-radius:5px;"></div></div>
+        </div>
+        <div style="background:#fff;padding:16px 26px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;font-weight:600;color:#08071A;">Course lecture</span><span style="font-size:12px;color:#7B7AAA;">22 slides</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section id="usecases" style="max-width:1240px;margin:0 auto;padding:64px 40px 60px;">
+    <div style="max-width:560px;">
+      <span style="font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:#0D009D;font-weight:600;">Who it's for</span>
+      <h2 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:44px;line-height:1.08;letter-spacing:-0.02em;margin:16px 0 0;">Built for anyone who lives in slides.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px;">
+      <div style="border-top:2px solid #08071A;padding-top:20px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0D009D" stroke-width="1.7"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5"/></svg>
+        <h3 style="font-size:17px;font-weight:600;margin:16px 0 0;">Consultants</h3>
+        <p style="font-size:14.5px;line-height:1.55;color:#3D3B6E;margin:8px 0 0;">Turn findings and models into client-ready decks overnight.</p>
+      </div>
+      <div style="border-top:2px solid #08071A;padding-top:20px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="1.7"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>
+        <h3 style="font-size:17px;font-weight:600;margin:16px 0 0;">Founders</h3>
+        <p style="font-size:14.5px;line-height:1.55;color:#3D3B6E;margin:8px 0 0;">Go from one-pager to a fundable pitch in a single sitting.</p>
+      </div>
+      <div style="border-top:2px solid #08071A;padding-top:20px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6B63F5" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        <h3 style="font-size:17px;font-weight:600;margin:16px 0 0;">Sales teams</h3>
+        <p style="font-size:14.5px;line-height:1.55;color:#3D3B6E;margin:8px 0 0;">Spin up tailored QBRs and proposals for every account.</p>
+      </div>
+      <div style="border-top:2px solid #08071A;padding-top:20px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#08071A" stroke-width="1.7"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14M4 19h16M9 8h6M9 12h6"/></svg>
+        <h3 style="font-size:17px;font-weight:600;margin:16px 0 0;">Educators</h3>
+        <p style="font-size:14.5px;line-height:1.55;color:#3D3B6E;margin:8px 0 0;">Build clear, well-paced lectures from your notes and readings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="max-width:1240px;margin:60px auto 0;padding:0 40px;">
+    <div style="background:#060518;border-radius:24px;padding:78px 40px;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-60px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(13,0,157,0.16);filter:blur(40px);"></div>
+      <div style="position:absolute;bottom:-70px;right:-30px;width:220px;height:220px;border-radius:50%;background:rgba(31,111,92,0.16);filter:blur(40px);"></div>
+      <div style="position:relative;">
+        <h2 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:50px;line-height:1.05;letter-spacing:-0.02em;color:#EEF0FF;margin:0;max-width:660px;margin-inline:auto;">Your next deck is one prompt away.</h2>
+        <p style="font-size:17px;color:rgba(238,240,255,0.7);margin:20px auto 0;max-width:460px;">Start free. Bring a file or an idea — watch Unilever Deck Agent build the rest.</p>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;background:#fff;border-radius:12px;padding:5px 5px 5px 18px;gap:10px;">
+            <input placeholder="you@company.com" style="border:none;outline:none;background:none;font:400 15px/1 'Plus Jakarta Sans',sans-serif;width:200px;color:#08071A;" />
+            <button onclick="location.href='generator.html'" style="appearance:none;background:#0D009D;color:#fff;border:none;border-radius:9px;font:600 15px/1 'Plus Jakarta Sans',sans-serif;padding:13px 22px;cursor:pointer;white-space:nowrap;">Start building</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="max-width:1240px;margin:0 auto;padding:64px 40px 56px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;">
+    <div style="max-width:280px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <img src="unilever-logo.png" alt="Unilever" style="height:48px;width:auto;flex-shrink:0;">
+      </div>
+      <p style="font-size:14px;color:#7B7AAA;line-height:1.6;margin:16px 0 0;">The Unilever AI deck generation agent.</p>
+    </div>
+    <div style="display:flex;gap:64px;flex-wrap:wrap;">
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14.5px;color:#3D3B6E;">
+        <span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A0A0C8;margin-bottom:2px;">Product</span>
+        <a href="#features" style="color:inherit;text-decoration:none;">Features</a>
+        <a href="#gallery" style="color:inherit;text-decoration:none;">Templates</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Pricing</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14.5px;color:#3D3B6E;">
+        <span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A0A0C8;margin-bottom:2px;">Company</span>
+        <a href="#" style="color:inherit;text-decoration:none;">About</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Careers</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Contact</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:14.5px;color:#3D3B6E;">
+        <span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#A0A0C8;margin-bottom:2px;">Resources</span>
+        <a href="#how" style="color:inherit;text-decoration:none;">How it works</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Blog</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Help center</a>
+      </div>
+    </div>
+  </footer>
+  <div style="border-top:1px solid #DDE0F5;">
+    <div style="max-width:1240px;margin:0 auto;padding:22px 40px;display:flex;justify-content:space-between;font-size:13px;color:#A0A0C8;flex-wrap:wrap;gap:10px;">
+      <span>© 2026 Unilever PLC</span>
+      <span>Privacy · Terms · Security</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Typing animation — exact logic from Decka - Landing.dc.html
+const prompts = [
+  'Turn this Q3 sales report into a 12-slide board deck',
+  'Build a Series A pitch deck from my one-pager',
+  'Make a market analysis with charts and a timeline',
+];
+let pi = 0, ci = 0, phase = 'typing', timer;
+const el = document.getElementById('typed');
+
+function tick() {
+  const full = prompts[pi];
+  if (phase === 'typing') {
+    ci++;
+    el.textContent = full.slice(0, ci);
+    if (ci >= full.length) {
+      phase = 'hold';
+      timer = setTimeout(tick, 1900);
+      return;
+    }
+    timer = setTimeout(tick, 34 + Math.random() * 46);
+  } else if (phase === 'hold') {
+    phase = 'deleting';
+    timer = setTimeout(tick, 40);
+  } else {
+    ci -= 2;
+    if (ci < 0) ci = 0;
+    el.textContent = full.slice(0, ci);
+    if (ci <= 0) {
+      phase = 'typing';
+      pi = (pi + 1) % prompts.length;
+      timer = setTimeout(tick, 360);
+      return;
+    }
+    timer = setTimeout(tick, 16);
+  }
+}
+tick();
+
+// Feature tab switching
+function setFeature(key) {
+  ['charts','flow','layout','icons'].forEach(k => {
+    const p = document.getElementById('panel-' + k);
+    const t = document.getElementById('tab-' + k);
+    const on = k === key;
+    p.style.display = on ? 'grid' : 'none';
+    t.style.borderBottomColor = on ? '#0D009D' : 'transparent';
+    t.style.color = on ? '#EEF0FF' : 'rgba(238,240,255,0.7)';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deck Agent — Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:#FAFBFF;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-family:'Spline Sans',sans-serif;}
+  ::selection{background:#0D009D;color:#fff;}
+  textarea::placeholder{color:#A0A0C8;}
+  input::placeholder{color:#A0A0C8;}
+  @keyframes deckaFadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes deckaSpin{to{transform:rotate(360deg);}}
+
+  /* Preview modal */
+  #previewModal{display:none;position:fixed;inset:0;z-index:100;background:rgba(8,7,26,0.72);backdrop-filter:blur(4px);overflow-y:auto;padding:40px 20px;}
+  #previewModal.open{display:flex;align-items:flex-start;justify-content:center;}
+  #previewInner{background:#fff;border-radius:20px;width:100%;max-width:900px;padding:32px;position:relative;margin:auto;}
+  #previewGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:24px;}
+  .prev-card{border:1px solid #DDE0F5;border-radius:13px;padding:20px;cursor:default;background:#FAFBFF;min-height:140px;display:flex;flex-direction:column;gap:8px;animation:deckaFadeUp .3s ease both;}
+  .prev-card:hover{border-color:#0D009D;box-shadow:0 4px 16px -4px rgba(13,0,157,0.12);}
+  .prev-card-cover{background:#060518;color:#EEF0FF;}
+  .prev-label{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;font-weight:700;color:#A0A0C8;}
+  .prev-card-cover .prev-label{color:#6B63F5;}
+  .prev-title{font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;line-height:1.25;color:#08071A;flex:1;}
+  .prev-card-cover .prev-title{color:#EEF0FF;}
+  .prev-body{font-size:11.5px;color:#7B7AAA;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+
+  /* Slide count stepper */
+  .stepper{display:inline-flex;align-items:center;gap:0;border:1px solid #DDE0F5;border-radius:999px;overflow:hidden;background:#fff;}
+  .stepper-btn{appearance:none;border:none;background:none;width:32px;height:32px;font-size:18px;color:#3D3B6E;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .stepper-btn:hover{background:#F0F1FF;color:#0D009D;}
+  .stepper-val{font-size:13px;font-weight:600;color:#08071A;min-width:28px;text-align:center;padding:0 2px;}
+</style>
+</head>
+<body>
+<div style="font-family:'Spline Sans',sans-serif;color:#08071A;background:#FAFBFF;min-height:100vh;">
+
+  <!-- TOP BAR -->
+  <nav style="display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid #DDE0F5;background:rgba(250,251,255,0.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:40;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="landing.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+        <img src="unilever-logo.png" alt="Unilever" style="height:48px;width:auto;flex-shrink:0;">
+      </a>
+      <span style="width:1px;height:22px;background:#D5D8F8;"></span>
+      <span style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#3D3B6E;">
+        <span style="width:18px;height:18px;border-radius:5px;background:#0D009D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;">U</span>
+        Unilever workspace
+      </span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#1A50D6;background:rgba(26,80,214,0.1);border:1px solid rgba(26,80,214,0.22);border-radius:999px;padding:6px 13px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="2.2"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+        Brand locked · Unilever 2026
+      </span>
+      <div style="width:32px;height:32px;border-radius:50%;background:#0D009D;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;">JL</div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div style="max-width:1180px;margin:0 auto;padding:48px 32px 0;">
+    <div>
+      <h1 style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:44px;line-height:1.02;letter-spacing:-0.03em;margin:0;">What do you want to present?</h1>
+      <p style="font-size:16px;color:#3D3B6E;margin:14px 0 0;max-width:540px;line-height:1.6;">Describe it or drop in your files. The agent does the research, writing and design — every slide comes out in Unilever's locked brand.</p>
+      <div id="starterChips" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;align-items:center;">
+        <span style="font-size:12.5px;color:#A0A0C8;margin-right:2px;">Try:</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPOSER -->
+  <div style="max-width:1180px;margin:0 auto;padding:28px 32px 0;">
+    <div style="background:#fff;border:1px solid #DDE0F5;border-radius:20px;box-shadow:0 30px 60px -40px rgba(8,7,26,0.4);overflow:hidden;">
+      <input id="titleInput" type="text" maxlength="80" placeholder="Deck title (optional) — becomes the cover title & file name"
+             style="width:100%;border:none;outline:none;padding:18px 24px 4px;font:700 20px/1.3 'DM Sans',sans-serif;color:#08071A;background:none;letter-spacing:-0.01em;">
+      <textarea id="promptInput" rows="3" placeholder="e.g. Turn this Q3 sales report into a board review for the Unilever exec team…" style="width:100%;border:none;outline:none;resize:none;padding:6px 24px 8px;font:400 18px/1.5 'Spline Sans',sans-serif;color:#08071A;background:none;"></textarea>
+
+      <!-- file chips -->
+      <div id="fileChips" style="display:flex;gap:8px;padding:6px 24px 0;flex-wrap:wrap;">
+        <button id="addFileBtn" style="display:inline-flex;align-items:center;gap:7px;appearance:none;cursor:pointer;font-size:13px;color:#7B7AAA;background:none;border:1px dashed #D5D8F8;border-radius:9px;padding:8px 12px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M12 5v14M5 12h14"></path></svg>
+          Add file
+        </button>
+      </div>
+
+      <!-- controls -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-top:1px solid #E8EAFF;margin-top:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+
+          <!-- deck type -->
+          <span style="font-size:12.5px;color:#7B7AAA;letter-spacing:0.02em;">Type</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="deckTypeGroup">
+            <button onclick="selectDeckType(this,'board_review')" class="chip chip-active" style="display:inline-flex;align-items:center;appearance:none;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px;padding:7px 14px;transition:all .15s;background:#0D009D;color:#fff;border:1px solid #0D009D;">Board Review</button>
+            <button onclick="selectDeckType(this,'sales_qbr')" class="chip" style="display:inline-flex;align-items:center;appearance:none;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px;padding:7px 14px;transition:all .15s;background:none;color:#3D3B6E;border:1px solid #DDE0F5;">Sales QBR</button>
+            <button onclick="selectDeckType(this,'project_plan')" class="chip" style="display:inline-flex;align-items:center;appearance:none;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px;padding:7px 14px;transition:all .15s;background:none;color:#3D3B6E;border:1px solid #DDE0F5;">Project Plan</button>
+            <button onclick="selectDeckType(this,'pitch')" class="chip" style="display:inline-flex;align-items:center;appearance:none;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px;padding:7px 14px;transition:all .15s;background:none;color:#3D3B6E;border:1px solid #DDE0F5;">Pitch</button>
+            <button onclick="selectDeckType(this,'analysis')" class="chip" style="display:inline-flex;align-items:center;appearance:none;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px;padding:7px 14px;transition:all .15s;background:none;color:#3D3B6E;border:1px solid #DDE0F5;">Analysis</button>
+          </div>
+
+          <!-- slide count stepper -->
+          <span style="font-size:12.5px;color:#7B7AAA;letter-spacing:0.02em;margin-left:6px;">Slides</span>
+          <button id="autoToggle" onclick="toggleAuto()" title="Let the agent decide the number of slides from your content"
+                  style="display:inline-flex;align-items:center;gap:6px;appearance:none;cursor:pointer;font-size:13px;font-weight:600;border-radius:999px;padding:7px 13px;transition:all .15s;background:#0D009D;color:#fff;border:1px solid #0D009D;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>
+            Auto
+          </button>
+          <div class="stepper" id="slideStepper" style="opacity:0.4;pointer-events:none;">
+            <button class="stepper-btn" onclick="adjustSlides(-1)">−</button>
+            <span class="stepper-val" id="slideCountDisplay">8</span>
+            <button class="stepper-btn" onclick="adjustSlides(1)">+</button>
+          </div>
+          <span id="slideCountHint" style="font-size:11.5px;color:#A0A0C8;">agent decides</span>
+
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <label id="imageToggle" onclick="toggleImages()" title="Generate AI images (Nano Banana) for the cover and section slides — adds a little time"
+                 style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#3D3B6E;user-select:none;white-space:nowrap;">
+            <span id="imageSwitch" style="width:34px;height:20px;border-radius:999px;background:#DDE0F5;position:relative;transition:background .15s;flex-shrink:0;">
+              <span id="imageKnob" style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.2);transition:left .15s;"></span>
+            </span>
+            AI images
+          </label>
+          <label id="reviewToggle" onclick="toggleReview()" title="See and edit the slide outline before the full deck is built"
+                 style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#3D3B6E;user-select:none;white-space:nowrap;">
+            <span id="reviewSwitch" style="width:34px;height:20px;border-radius:999px;background:#DDE0F5;position:relative;transition:background .15s;flex-shrink:0;">
+              <span id="reviewKnob" style="position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.2);transition:left .15s;"></span>
+            </span>
+            Review outline first
+          </label>
+          <button id="genBtn" onclick="startGeneration()" style="display:inline-flex;align-items:center;gap:10px;appearance:none;background:#0D009D;color:#fff;border:none;border-radius:12px;font:600 16px/1 'Spline Sans',sans-serif;padding:15px 26px;cursor:pointer;white-space:nowrap;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"></path></svg>
+            <span id="genBtnLabel">Generate deck</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORK AREA -->
+  <div style="max-width:1180px;margin:0 auto;padding:24px 32px 80px;">
+    <main style="min-height:520px;">
+
+      <!-- IDLE STATE -->
+      <div id="state-idle">
+        <div style="background:#fff;border:1px dashed #DCD4C4;border-radius:18px;height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;">
+          <div style="display:grid;grid-template-columns:repeat(3,46px);gap:10px;opacity:0.5;">
+            <div style="height:34px;border-radius:6px;background:#E8EAFF;"></div>
+            <div style="height:34px;border-radius:6px;background:#E8EAFF;"></div>
+            <div style="height:34px;border-radius:6px;background:#E8EAFF;"></div>
+            <div style="height:34px;border-radius:6px;background:#E8EAFF;"></div>
+            <div style="height:34px;border-radius:6px;background:#DDE0F5;"></div>
+            <div style="height:34px;border-radius:6px;background:#E8EAFF;"></div>
+          </div>
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:24px;margin:28px 0 0;">Your deck will appear here</h3>
+          <p style="font-size:14.5px;color:#7B7AAA;margin:10px 0 0;max-width:340px;line-height:1.55;">Press <span style="color:#0D009D;font-weight:600;">Generate</span> and the agent will research, write and design it — automatically on-brand.</p>
+        </div>
+      </div>
+
+      <!-- RUNNING STATE -->
+      <div id="state-running" style="display:none;">
+        <div style="background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:34px 36px;min-height:520px;">
+          <div style="display:flex;align-items:flex-start;gap:13px;">
+            <span style="width:22px;height:22px;border:2.5px solid #E8EAFF;border-top-color:#0D009D;border-radius:50%;display:inline-block;flex-shrink:0;margin-top:5px;animation:deckaSpin .7s linear infinite;"></span>
+            <div>
+              <div style="font-family:'DM Sans',sans-serif;font-size:23px;line-height:1.15;">Building your deck…</div>
+              <p style="font-size:13.5px;color:#7B7AAA;margin:6px 0 0;">The agent is researching, writing and designing every slide on-brand.</p>
+            </div>
+          </div>
+          <div style="margin-top:26px;border-top:1px solid #E8EAFF;" id="stepsList"></div>
+        </div>
+      </div>
+
+      <!-- OUTLINE REVIEW STATE -->
+      <div id="state-outline" style="display:none;">
+        <div style="background:#fff;border:1px solid #DDE0F5;border-radius:18px;padding:30px 34px;min-height:480px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+            <div>
+              <h3 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:23px;margin:0;">Review the outline</h3>
+              <p id="outlineMeta" style="font-size:13.5px;color:#7B7AAA;margin:6px 0 0;">Edit headlines, reorder, remove or add slides — then build the deck.</p>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button onclick="startGeneration()" title="Discard and re-plan the outline" style="appearance:none;background:none;border:1px solid #D5D8F8;border-radius:10px;font:500 14px/1 'Spline Sans',sans-serif;padding:11px 16px;cursor:pointer;color:#08071A;display:inline-flex;align-items:center;gap:7px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 7"></path><path d="M21 3v4h-4"></path></svg>
+                Regenerate
+              </button>
+              <button onclick="buildFromOutline()" style="appearance:none;background:#0D009D;color:#fff;border:none;border-radius:10px;font:600 14px/1 'Spline Sans',sans-serif;padding:11px 20px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M5 12l5 5L20 6"></path></svg>
+                Build deck
+              </button>
+            </div>
+          </div>
+          <div id="outlineList" style="margin-top:22px;display:flex;flex-direction:column;gap:10px;"></div>
+          <button onclick="addOutlineSlide()" style="margin-top:14px;appearance:none;cursor:pointer;font-size:13px;color:#0D009D;background:none;border:1px dashed #C3B9F5;border-radius:10px;padding:11px 14px;display:inline-flex;align-items:center;gap:7px;width:100%;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M12 5v14M5 12h14"></path></svg>
+            Add slide
+          </button>
+        </div>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div id="state-error" style="display:none;">
+        <div style="background:#fff;border:1px solid #F3C9C9;border-radius:18px;padding:40px;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(200,40,40,0.09);display:flex;align-items:center;justify-content:center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C82828" stroke-width="2.2"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+          </div>
+          <h3 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:22px;margin:20px 0 0;">Generation didn't finish</h3>
+          <p id="errorMsg" style="font-size:14.5px;color:#7B7AAA;margin:10px 0 0;max-width:420px;line-height:1.55;">Your prompt is safe. Check that the backend is running, then try again.</p>
+          <div style="display:flex;gap:10px;margin-top:24px;">
+            <button onclick="setState('idle')" style="appearance:none;background:none;border:1px solid #D5D8F8;border-radius:10px;font:500 14px/1 'Spline Sans',sans-serif;padding:12px 18px;cursor:pointer;color:#08071A;">Back</button>
+            <button onclick="startGeneration()" style="appearance:none;background:#0D009D;color:#fff;border:none;border-radius:10px;font:600 14px/1 'Spline Sans',sans-serif;padding:12px 20px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 7"></path><path d="M21 3v4h-4"></path></svg>
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DONE STATE -->
+      <div id="state-done" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#1A50D6;background:rgba(26,80,214,0.1);border:1px solid rgba(26,80,214,0.22);border-radius:999px;padding:6px 13px;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="3"><path d="M5 12l5 5L20 6"></path></svg>
+              Brand check passed
+            </span>
+            <span id="qualityBadge" style="display:none;align-items:center;gap:6px;font-size:13px;font-weight:600;border-radius:999px;padding:6px 13px;"></span>
+            <span id="groundedBadge" style="display:none;align-items:center;gap:6px;font-size:13px;color:#0B7A3B;background:rgba(11,122,59,0.1);border:1px solid rgba(11,122,59,0.25);border-radius:999px;padding:6px 12px;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0B7A3B" stroke-width="2.2"><path d="M3 3v18h18"></path><rect x="7" y="10" width="3" height="7"></rect><rect x="12" y="6" width="3" height="11"></rect><rect x="17" y="13" width="3" height="4"></rect></svg>
+              Grounded in your data
+            </span>
+            <span id="doneLabel" style="font-size:14px;color:#3D3B6E;"></span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button onclick="resetState()" style="appearance:none;background:none;border:1px solid #D5D8F8;border-radius:10px;font:500 14px/1 'Spline Sans',sans-serif;padding:11px 16px;cursor:pointer;color:#08071A;display:inline-flex;align-items:center;gap:7px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 7"></path><path d="M21 3v4h-4"></path></svg>
+              Regenerate
+            </button>
+            <button id="previewBtn" onclick="openPreview()" style="appearance:none;background:#fff;border:1px solid #08071A;border-radius:10px;font:600 14px/1 'Spline Sans',sans-serif;padding:11px 18px;cursor:pointer;color:#08071A;display:inline-flex;align-items:center;gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              Preview deck
+            </button>
+            <button id="exportBtn" onclick="exportPptx()" style="appearance:none;background:#08071A;color:#EEF0FF;border:none;border-radius:10px;font:600 14px/1 'Spline Sans',sans-serif;padding:11px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path></svg>
+              Export PPTX
+            </button>
+          </div>
+        </div>
+
+        <!-- slide thumbnail grid — populated by JS after generation -->
+        <div id="slideThumbs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div id="previewModal" onclick="closePreviewOnBackdrop(event)">
+  <div id="previewInner">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <div>
+        <h2 style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:22px;margin:0;" id="previewTitle">Slide Preview</h2>
+        <p style="font-size:13px;color:#7B7AAA;margin:4px 0 0;" id="previewSubtitle"></p>
+      </div>
+      <button onclick="closePreview()" style="appearance:none;background:none;border:1px solid #DDE0F5;border-radius:10px;padding:9px 14px;cursor:pointer;font:500 13px/1 'Spline Sans',sans-serif;color:#08071A;display:inline-flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        Close
+      </button>
+    </div>
+    <div id="previewGrid"></div>
+    <div id="previewLoading" style="text-align:center;padding:60px;display:none;">
+      <span style="width:26px;height:26px;border:2.5px solid #E8EAFF;border-top-color:#0D009D;border-radius:50%;display:inline-block;animation:deckaSpin .7s linear infinite;"></span>
+      <p style="font-size:14px;color:#7B7AAA;margin:14px 0 0;">Loading slide data…</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Call the SAME origin that served this page (localhost, 127.0.0.1, or a deployed
+// host) so there's no cross-origin/CORS mismatch. When the backend serves the
+// frontend (the normal case), this is same-origin. If you serve the frontend
+// from a SEPARATE static server, hardcode the backend URL here instead, e.g.
+//   const API_BASE = 'http://localhost:8000/api';
+const API_BASE = (location.protocol === 'http:' || location.protocol === 'https:')
+  ? `${location.origin}/api`
+  : 'http://localhost:8000/api';
+
+// ── state ─────────────────────────────────────────────────────────────────────
+let _downloadUrl = '';
+let _currentJobId = '';
+let _slideCount   = 8;
+let _autoSlides   = true;   // default: let the agent decide the count
+let _deckType     = 'board_review';
+let _previewData  = null;
+const uploadedFileIds = [];
+
+// ── auto / manual slide count ─────────────────────────────────────────────────
+function toggleAuto() {
+  _autoSlides = !_autoSlides;
+  applyAutoUI();
+}
+function applyAutoUI() {
+  const btn = document.getElementById('autoToggle');
+  const stepper = document.getElementById('slideStepper');
+  const hint = document.getElementById('slideCountHint');
+  const disp = document.getElementById('slideCountDisplay');
+  if (_autoSlides) {
+    btn.style.background = '#0D009D'; btn.style.color = '#fff'; btn.style.borderColor = '#0D009D';
+    stepper.style.opacity = '0.4'; stepper.style.pointerEvents = 'none';
+    disp.textContent = 'Auto';
+    hint.textContent = 'agent decides';
+  } else {
+    btn.style.background = 'none'; btn.style.color = '#3D3B6E'; btn.style.borderColor = '#DDE0F5';
+    stepper.style.opacity = '1'; stepper.style.pointerEvents = 'auto';
+    disp.textContent = _slideCount;
+    hint.textContent = '4 – 20';
+  }
+}
+
+// ── quality + grounding badges ────────────────────────────────────────────────
+function updateQualityBadges(data) {
+  const q = document.getElementById('qualityBadge');
+  const g = document.getElementById('groundedBadge');
+  if (q) {
+    const score = data && typeof data.quality_score === 'number' ? data.quality_score : null;
+    if (score === null) {
+      q.style.display = 'none';
+    } else {
+      const pass = score >= 6;
+      q.style.display = 'inline-flex';
+      q.style.color = pass ? '#0D009D' : '#B4530A';
+      q.style.background = pass ? 'rgba(13,0,157,0.08)' : 'rgba(180,83,10,0.1)';
+      q.style.border = `1px solid ${pass ? 'rgba(13,0,157,0.22)' : 'rgba(180,83,10,0.28)'}`;
+      q.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5 20.4l1.4-6.8L1.3 9.1l6.9-.8z"></path></svg>Quality ${score.toFixed(1)}/10`;
+    }
+  }
+  if (g) g.style.display = (data && data.grounded) ? 'inline-flex' : 'none';
+}
+
+// ── slide count stepper ───────────────────────────────────────────────────────
+function adjustSlides(delta) {
+  if (_autoSlides) { _autoSlides = false; applyAutoUI(); }  // manual step exits Auto
+  _slideCount = Math.min(20, Math.max(4, _slideCount + delta));
+  document.getElementById('slideCountDisplay').textContent = _slideCount;
+}
+
+// ── deck type selector ────────────────────────────────────────────────────────
+function selectDeckType(btn, type) {
+  _deckType = type;
+  document.querySelectorAll('#deckTypeGroup .chip').forEach(b => {
+    b.style.background = 'none';
+    b.style.color = '#3D3B6E';
+    b.style.borderColor = '#DDE0F5';
+  });
+  btn.style.background = '#0D009D';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#0D009D';
+}
+
+// ── file upload ───────────────────────────────────────────────────────────────
+document.getElementById('addFileBtn').addEventListener('click', () => {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = '.pdf,.xlsx,.xls,.csv,.docx,.txt,.png,.jpg,.jpeg';
+  inp.onchange = async () => {
+    if (!inp.files[0]) return;
+    const fd = new FormData();
+    fd.append('file', inp.files[0]);
+    try {
+      const res = await fetch(`${API_BASE}/upload`, { method: 'POST', body: fd });
+      const data = await res.json();
+      uploadedFileIds.push(data.file_id);
+      addFileChip(inp.files[0].name, data.file_id);
+    } catch (e) { console.warn('Upload failed:', e); }
+  };
+  inp.click();
+});
+
+function addFileChip(name, fileId) {
+  const chip = document.createElement('span');
+  chip.style.cssText = 'display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#3D3B6E;background:#FAFBFF;border:1px solid #DDE0F5;border-radius:9px;padding:8px 12px;';
+  chip.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A50D6" stroke-width="2.1"><path d="M4 4h11l5 5v11H4z"></path><path d="M15 4v5h5"></path></svg>${name}<svg onclick="removeChip(this,'${fileId}')" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A0A0C8" stroke-width="2.2" style="cursor:pointer;"><path d="M6 6l12 12M18 6L6 18"></path></svg>`;
+  document.getElementById('addFileBtn').insertAdjacentElement('beforebegin', chip);
+}
+
+function removeChip(el, fileId) {
+  const idx = uploadedFileIds.indexOf(fileId);
+  if (idx > -1) uploadedFileIds.splice(idx, 1);
+  el.closest('span').remove();
+}
+
+// ── state management ──────────────────────────────────────────────────────────
+function setState(name) {
+  ['idle','running','done','error','outline'].forEach(s => {
+    document.getElementById('state-' + s).style.display = s === name ? 'block' : 'none';
+  });
+}
+
+// ── AI image generation toggle ────────────────────────────────────────────────
+let _genImages = false;
+function toggleImages() {
+  _genImages = !_genImages;
+  document.getElementById('imageSwitch').style.background = _genImages ? '#0D009D' : '#DDE0F5';
+  document.getElementById('imageKnob').style.left = _genImages ? '16px' : '2px';
+}
+
+// ── outline review mode ───────────────────────────────────────────────────────
+let _reviewMode   = false;
+let _outlineJobId = '';
+let _outline      = [];
+function toggleReview() {
+  _reviewMode = !_reviewMode;
+  const sw = document.getElementById('reviewSwitch');
+  const knob = document.getElementById('reviewKnob');
+  const label = document.getElementById('genBtnLabel');
+  sw.style.background = _reviewMode ? '#0D009D' : '#DDE0F5';
+  knob.style.left = _reviewMode ? '16px' : '2px';
+  if (label) label.textContent = _reviewMode ? 'Plan outline' : 'Generate deck';
+}
+
+// ── starter example prompts (click to fill) ───────────────────────────────────
+const STARTERS = [
+  { label: '📊 Board review from data', type: 'board_review',
+    title: 'Q3 Business Review',
+    prompt: 'Turn our Q3 results into a board review for the exec team — highlights, key metrics, risks, and recommendations. Include a chart of revenue by segment.' },
+  { label: '🚀 Product pitch', type: 'pitch',
+    title: 'Product Launch Pitch',
+    prompt: 'Create an investor pitch for a new product — problem, solution, market size, traction, business model, and the ask.' },
+  { label: '🗺️ Project plan', type: 'project_plan',
+    title: 'Project Plan',
+    prompt: 'Build a project plan deck — objectives, scope, timeline/roadmap, milestones, risks and mitigations, and next steps.' },
+  { label: '📈 Sales QBR', type: 'sales_qbr',
+    title: 'Sales QBR',
+    prompt: 'Prepare a quarterly business review for sales leadership — pipeline, win/loss, quota attainment, top deals, and the plan for next quarter.' },
+];
+function renderStarters() {
+  const wrap = document.getElementById('starterChips');
+  if (!wrap) return;
+  STARTERS.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = s.label;
+    b.style.cssText = 'appearance:none;cursor:pointer;font-size:12.5px;color:#3D3B6E;background:#fff;border:1px solid #DDE0F5;border-radius:999px;padding:7px 13px;transition:all .15s;';
+    b.onmouseenter = () => { b.style.borderColor = '#0D009D'; b.style.color = '#0D009D'; };
+    b.onmouseleave = () => { b.style.borderColor = '#DDE0F5'; b.style.color = '#3D3B6E'; };
+    b.onclick = () => useStarter(s);
+    wrap.appendChild(b);
+  });
+}
+function useStarter(s) {
+  document.getElementById('promptInput').value = s.prompt;
+  document.getElementById('titleInput').value = s.title;
+  const btn = [...document.querySelectorAll('#deckTypeGroup .chip')]
+    .find(b => b.getAttribute('onclick')?.includes(`'${s.type}'`));
+  if (btn) selectDeckType(btn, s.type);
+  document.getElementById('promptInput').focus();
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  if (el && msg) el.textContent = msg;
+  setState('error');
+}
+
+function resetState() {
+  setState('idle');
+  document.getElementById('stepsList').innerHTML = '';
+  document.getElementById('slideThumbs').innerHTML = '';
+  document.getElementById('qualityBadge').style.display = 'none';
+  document.getElementById('groundedBadge').style.display = 'none';
+  _downloadUrl = '';
+  _currentJobId = '';
+  _previewData = null;
+}
+
+// ── stage events (SSE) ────────────────────────────────────────────────────────
+function _applyStageEvent(evt) {
+  const list = document.getElementById('stepsList');
+  if (!list) return;
+  let row = list.querySelector(`[data-stage="${CSS.escape(evt.stage)}"]`);
+  if (!row) {
+    row = document.createElement('div');
+    row.dataset.stage = evt.stage;
+    row.style.cssText = 'display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #F0F2FF;';
+    list.appendChild(row);
+  }
+  const spinIcon = `<span style="width:22px;height:22px;border:2.5px solid #E8EAFF;border-top-color:#0D009D;border-radius:50%;flex-shrink:0;animation:deckaSpin .7s linear infinite;display:inline-block;"></span>`;
+  const doneIcon = `<span style="width:22px;height:22px;border-radius:50%;background:#1A50D6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5L20 6"/></svg></span>`;
+  row.innerHTML = `${evt.status === 'done' ? doneIcon : spinIcon}<span style="font-size:14px;color:#08071A;font-weight:500;">${evt.stage}${evt.message ? ' — ' + evt.message : ''}</span>`;
+}
+
+// ── generation ────────────────────────────────────────────────────────────────
+function currentPayload() {
+  const prompt = document.getElementById('promptInput').value.trim();
+  const payload = { prompt, deck_type: _deckType, file_ids: uploadedFileIds };
+  const title = document.getElementById('titleInput').value.trim();
+  if (title) payload.title = title;                      // user title → cover + file name
+  if (!_autoSlides) payload.slide_count = _slideCount;   // omit → backend auto-decides
+  if (_genImages) payload.generate_images = true;        // opt-in AI imagery
+  return payload;
+}
+
+function startGeneration() {
+  const prompt = document.getElementById('promptInput').value.trim();
+  if (!prompt) { document.getElementById('promptInput').focus(); return; }
+
+  const payload = currentPayload();
+  if (_reviewMode) { requestOutline(payload); return; }   // two-phase: plan → review → build
+  runStream('/generate', JSON.stringify(payload));
+}
+
+// Phase 1: ask the backend to plan an editable outline.
+function requestOutline(payload) {
+  setState('running');
+  document.getElementById('stepsList').innerHTML = '';
+  _applyStageEvent({ stage: 'Planning outline', status: 'active',
+                     message: 'Understanding your request and drafting the storyline…' });
+  fetch(`${API_BASE}/outline`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(res => { if (!res.ok) throw new Error('outline failed'); return res.json(); })
+    .then(data => {
+      _outlineJobId = data.job_id;
+      _outline = data.slides || [];
+      renderOutline(data);
+      setState('outline');
+    })
+    .catch(() => showError('Could not plan the outline. Check the backend is running and retry.'));
+}
+
+// Phase 2: build the deck from the (edited) outline.
+function buildFromOutline() {
+  collectOutlineEdits();
+  if (!_outline.length) { alert('Add at least one slide first.'); return; }
+  runStream('/build', JSON.stringify({ job_id: _outlineJobId, slides: _outline }));
+}
+
+// Shared SSE streamer used by both /generate and /build.
+function runStream(path, body) {
+  setState('running');
+  document.getElementById('stepsList').innerHTML = '';
+  fetch(`${API_BASE}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body })
+    .then(res => {
+      if (!res.ok || !res.body) throw new Error('Backend unavailable');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      function pump() {
+        return reader.read().then(({ done, value }) => {
+          if (value) buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (line.startsWith('data:')) {
+              try {
+                const evt = JSON.parse(line.slice(5).trim());
+                if (evt.status === 'error' || evt.stage === 'error') {
+                  showError(evt.message || 'The pipeline hit an error. Your prompt is safe — retry.');
+                  return;
+                }
+                _applyStageEvent(evt);
+                if (evt.stage === 'complete') {
+                  _downloadUrl = evt.message;
+                  _currentJobId = evt.message.split('/').pop();
+                  setTimeout(() => finishGeneration(), 600);
+                  return;
+                }
+              } catch {}
+            }
+          }
+          if (done) {
+            // flush buffer
+            if (buffer.startsWith('data:')) {
+              try {
+                const evt = JSON.parse(buffer.slice(5).trim());
+                if (evt.stage === 'complete') {
+                  _downloadUrl = evt.message;
+                  _currentJobId = evt.message.split('/').pop();
+                }
+              } catch {}
+            }
+            setTimeout(() => finishGeneration(), 600);
+          } else {
+            return pump();
+          }
+        });
+      }
+      return pump();
+    })
+    .catch(err => {
+      console.warn('Backend error:', err);
+      // Prompt/title/files are preserved (never cleared) — offer an inline retry.
+      showError('Could not reach the backend. Your prompt is safe — check the server is running and retry.');
+    });
+}
+
+async function finishGeneration() {
+  setState('done');
+  const provisional = _autoSlides ? 'Auto' : _slideCount;
+  document.getElementById('doneLabel').textContent = `${provisional} slides · Unilever 2026`;
+
+  // Load real slide thumbnails
+  if (_currentJobId) {
+    await loadThumbnails(_currentJobId);
+  }
+}
+
+// ── outline editing ───────────────────────────────────────────────────────────
+function renderOutline(data) {
+  const intent = data.intent || {};
+  const bits = [];
+  if (intent.audience) bits.push('for ' + intent.audience);
+  if (intent.tone) bits.push(intent.tone);
+  document.getElementById('outlineMeta').textContent =
+    `${_outline.length} slides${bits.length ? ' · ' + bits.join(' · ') : ''} — edit headlines, reorder, remove or add, then build.`;
+  drawOutlineRows();
+}
+function _obtn(onclick, title, svg, disabled) {
+  return `<button onclick="${onclick}" title="${title}" ${disabled ? 'disabled' : ''}
+    style="appearance:none;cursor:${disabled ? 'default' : 'pointer'};width:30px;height:30px;border-radius:8px;border:1px solid #DDE0F5;background:#fff;color:#3D3B6E;display:flex;align-items:center;justify-content:center;opacity:${disabled ? '0.35' : '1'};">${svg}</button>`;
+}
+function drawOutlineRows() {
+  const list = document.getElementById('outlineList');
+  list.innerHTML = '';
+  const up = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  const dn = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
+  const rm = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C82828" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+  _outline.forEach((s, i) => {
+    const sec = (s.section || '').toLowerCase(), lay = (s.layout || '').toLowerCase();
+    const locked = lay === 'cover' || lay === 'close' || /cover/.test(sec) || /close|next steps/.test(sec);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;background:#FAFBFF;border:1px solid #E8EAFF;border-radius:12px;padding:11px 14px;animation:deckaFadeUp .25s ease both;';
+    row.innerHTML = `
+      <span style="width:26px;height:26px;flex-shrink:0;border-radius:7px;background:#EEF0FF;color:#0D009D;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;">${i + 1}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#A0A0C8;margin-bottom:2px;">${s.section || s.layout || 'Slide'}</div>
+        <input data-oi="${i}" value="${(s.headline || '').replace(/"/g, '&quot;')}"
+               style="width:100%;border:none;background:none;outline:none;font:600 14px/1.3 'Spline Sans',sans-serif;color:#08071A;">
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0;">
+        ${_obtn(`moveOutline(${i},-1)`, 'Move up', up, i === 0)}
+        ${_obtn(`moveOutline(${i},1)`, 'Move down', dn, i === _outline.length - 1)}
+        ${_obtn(`removeOutline(${i})`, locked ? 'Cover / close cannot be removed' : 'Remove slide', rm, locked)}
+      </div>`;
+    list.appendChild(row);
+  });
+}
+function collectOutlineEdits() {
+  document.querySelectorAll('#outlineList input[data-oi]').forEach(inp => {
+    const i = +inp.dataset.oi;
+    if (_outline[i]) _outline[i].headline = inp.value;
+  });
+}
+function moveOutline(i, dir) {
+  collectOutlineEdits();
+  const j = i + dir;
+  if (j < 0 || j >= _outline.length) return;
+  [_outline[i], _outline[j]] = [_outline[j], _outline[i]];
+  drawOutlineRows();
+}
+function removeOutline(i) {
+  collectOutlineEdits();
+  _outline.splice(i, 1);
+  drawOutlineRows();
+}
+function addOutlineSlide() {
+  collectOutlineEdits();
+  _outline.push({ orig_index: -1, section: 'Findings & Data', layout: 'findings', headline: 'New slide', body: '' });
+  drawOutlineRows();
+}
+
+// ── real slide thumbnails ─────────────────────────────────────────────────────
+async function loadThumbnails(jobId) {
+  const grid = document.getElementById('slideThumbs');
+  grid.innerHTML = '';
+  try {
+    const res = await fetch(`${API_BASE}/preview/${jobId}`);
+    const data = await res.json();
+    _previewData = data;
+    updateQualityBadges(data);
+    document.getElementById('doneLabel').textContent = `${data.total} slides · Unilever 2026`;
+    data.slides.forEach((slide, i) => {
+      const isCover = slide.index === 0;
+      const card = document.createElement('div');
+      card.style.cssText = `border:1px solid #DDE0F5;border-radius:13px;aspect-ratio:4/3;padding:20px;display:flex;flex-direction:column;gap:8px;cursor:pointer;animation:deckaFadeUp .4s ease both ${i * 0.05}s;${isCover ? 'background:#060518;' : 'background:#fff;'}`;
+      card.onclick = () => openPreview();
+      const dataChip = slide.grounded
+        ? `<span title="Chart built from your uploaded data" style="display:inline-flex;align-items:center;gap:4px;font-size:8.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#0B7A3B;background:rgba(11,122,59,0.1);border-radius:5px;padding:2px 6px;">
+             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#0B7A3B" stroke-width="2.5"><path d="M3 3v18h18"></path><rect x="7" y="10" width="3" height="7"></rect><rect x="12" y="6" width="3" height="11"></rect></svg>Data</span>`
+        : '';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+          <span style="font-size:9px;letter-spacing:0.13em;text-transform:uppercase;font-weight:700;color:${isCover ? '#6B63F5' : '#A0A0C8'};">${slide.label || (isCover ? 'Cover' : 'Slide ' + (slide.index + 1))}</span>
+          ${dataChip}
+        </div>
+        <div style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;line-height:1.25;flex:1;color:${isCover ? '#EEF0FF' : '#08071A'};overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">${slide.title}</div>
+        ${slide.body ? `<div style="font-size:10.5px;color:${isCover ? '#9B9BCC' : '#A0A0C8'};overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${slide.body}</div>` : ''}
+      `;
+      grid.appendChild(card);
+    });
+  } catch (e) {
+    // Fallback: show placeholder grid
+    for (let i = 0; i < _slideCount; i++) {
+      const card = document.createElement('div');
+      card.style.cssText = `border:1px solid #DDE0F5;border-radius:13px;aspect-ratio:4/3;padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#FAFBFF;`;
+      card.innerHTML = `<div style="font-size:12px;color:#A0A0C8;">Slide ${i + 1}</div>`;
+      grid.appendChild(card);
+    }
+  }
+}
+
+// ── preview modal ─────────────────────────────────────────────────────────────
+async function openPreview() {
+  if (!_currentJobId) return;
+  const modal = document.getElementById('previewModal');
+  const grid  = document.getElementById('previewGrid');
+  const loading = document.getElementById('previewLoading');
+
+  grid.innerHTML = '';
+  loading.style.display = 'block';
+  modal.classList.add('open');
+
+  try {
+    const res  = await fetch(`${API_BASE}/preview/${_currentJobId}`);
+    const data = await res.json();
+
+    _previewData = data;
+    updateQualityBadges(data);
+    document.getElementById('previewTitle').textContent = data.title || 'Slide Preview';
+    const q = (typeof data.quality_score === 'number') ? ` · quality ${data.quality_score.toFixed(1)}/10` : '';
+    const g = data.grounded ? ' · grounded in your data' : '';
+    document.getElementById('previewSubtitle').textContent =
+      `${data.total} slides · ${_deckType.replace('_', ' ')} · Unilever 2026${q}${g}`;
+
+    loading.style.display = 'none';
+    data.slides.forEach((slide, i) => {
+      const isCover = slide.index === 0;
+      const card = document.createElement('div');
+      card.className = `prev-card${isCover ? ' prev-card-cover' : ''}`;
+      card.style.animationDelay = `${i * 0.04}s`;
+      const dataChip = slide.grounded
+        ? `<span title="Built from your uploaded data" style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#0B7A3B;background:rgba(11,122,59,0.1);border-radius:4px;padding:2px 5px;">
+             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#0B7A3B" stroke-width="2.6"><path d="M3 3v18h18"></path><rect x="7" y="10" width="3" height="7"></rect></svg>Data</span>`
+        : '';
+      const notes = slide.notes
+        ? `<div style="margin-top:6px;padding-top:8px;border-top:1px dashed ${isCover ? '#2A2748' : '#E8EAFF'};font-size:10px;line-height:1.5;color:${isCover ? '#8987B8' : '#9B9BCC'};overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><span style="font-weight:700;text-transform:uppercase;letter-spacing:0.05em;font-size:8px;">Notes</span> ${slide.notes}</div>`
+        : '';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span class="prev-label">${slide.label || 'Slide ' + (slide.index + 1)}</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            ${dataChip}
+            <span style="font-family:'Spline Sans Mono',monospace;font-size:9px;color:${isCover ? '#6B63F5' : '#A0A0C8'};">${String(slide.index + 1).padStart(2,'0')}</span>
+          </div>
+        </div>
+        <div class="prev-title">${slide.title}</div>
+        ${slide.body ? `<div class="prev-body">${slide.body}</div>` : ''}
+        ${notes}
+      `;
+      grid.appendChild(card);
+    });
+  } catch (e) {
+    loading.style.display = 'none';
+    grid.innerHTML = '<p style="color:#7B7AAA;font-size:14px;padding:20px;">Could not load slide preview.</p>';
+  }
+}
+
+function closePreview() {
+  document.getElementById('previewModal').classList.remove('open');
+}
+
+function closePreviewOnBackdrop(e) {
+  if (e.target === document.getElementById('previewModal')) closePreview();
+}
+
+// ── export ────────────────────────────────────────────────────────────────────
+function exportPptx() {
+  if (!_downloadUrl) { alert('Deck is still generating — please wait.'); return; }
+  const url = `${API_BASE}${_downloadUrl.replace('/api','')}`;
+  // Name the file after the (user or generated) deck title so the download
+  // matches what the user sees. Falls back to a safe default.
+  const rawTitle = (_previewData && _previewData.title) ||
+                   document.getElementById('titleInput').value.trim() ||
+                   'unilever-deck';
+  const safe = rawTitle.replace(/[^\w\s\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 80) || 'unilever-deck';
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${safe}.pptx`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// close modal on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
+
+// init
+setState('idle');
+applyAutoUI();
+renderStarters();
+</script>
+</body>
+</html>
